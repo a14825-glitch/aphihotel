@@ -27,9 +27,15 @@ class Hotel(Resource):
     def post(self,id_hotel):
         dados = Hotel.argumentos.parse_args() #Dicionario 
         for hotel in hoteis:
-            if hotel["hotel_id"] == id_hotel:
-                return{ "hotel_id": "Hotel with this id already exists"}
+            hotel_atualizado = { "hotel_id": id_hotel,**dados}
+            hotel.update(hotel_atualizado)
+            return hotel, 200
+            
+                
         novo_hotel = { "hotel_id":id_hotel, **dados }
         hoteis.append(novo_hotel)
-        return novo_hotel, 200
-    
+        return novo_hotel, 201
+    def delete(self,id_hotel):
+        global hoteis
+        hoteis = [hotel for hotel in hoteis if hotel["hotel_id"] != id_hotel]
+        return {"message":f"Hotel with {id_hotel} deleted"}
